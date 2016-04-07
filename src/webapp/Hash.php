@@ -14,7 +14,7 @@ class Hash
 
     public static function make($plaintext)
     {
-        return password_hash($plaintext, PASSWORD_BCRYPT);
+        return password_hash($plaintext, PASSWORD_BCRYPT); 
 
     }
 
