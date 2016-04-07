@@ -4,6 +4,7 @@ namespace ttm4135\webapp\controllers;
 use ttm4135\webapp\Auth;
 use ttm4135\webapp\models\User;
 
+
 class LoginController extends Controller
 {
     function __construct()
@@ -27,7 +28,6 @@ class LoginController extends Controller
         $request = $this->app->request;
         $username = $request->post('username');
         $password = $request->post('password');
-
         if ( Auth::checkCredentials($username, $password) ) {
             $user = User::findByUser($username);
             $_SESSION['userid'] = $user->getId();

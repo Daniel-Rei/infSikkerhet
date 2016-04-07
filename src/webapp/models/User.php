@@ -9,6 +9,7 @@ class User
     const DELETE_QUERY = "DELETE FROM users WHERE id=?";
     const FIND_BY_NAME_QUERY = "SELECT * FROM users WHERE username=?";
     const FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id=?";
+
     protected $id = null;
     protected $username;
     protected $password;
@@ -41,14 +42,7 @@ class User
      */
     function save()
     {
-        if ($this->id === null) {
-            /*$query = sprintf(self::INSERT_QUERY,
-                $this->username,
-                $this->password,
-                $this->email,
-                $this->bio,
-                $this->isAdmin            );*/
-            
+        if ($this->id === null) {          
             $query = self::$app->db->prepare(self::INSERT_QUERY);
           return $query->execute(array($this->username,
                 $this->password,
@@ -56,14 +50,6 @@ class User
                 $this->bio,
                 $this->isAdmin));
         } else {
-          /*$query = sprintf(self::UPDATE_QUERY,
-                $this->username,
-                $this->password,
-                $this->email,
-                $this->bio,
-                $this->isAdmin,
-                $this->id
-            );*/
           $query = self::$app->db->prepare(self::UPDATE_QUERY);
           return $query->execute(array($this->username,
                 $this->password,
@@ -72,8 +58,6 @@ class User
                 $this->isAdmin,
                 $this->id));
         }
-        
-        //return self::$app->db->exec($query);
     }
 
     function delete()
