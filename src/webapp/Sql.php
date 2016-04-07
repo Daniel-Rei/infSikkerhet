@@ -1,7 +1,7 @@
 <?php
 
 namespace ttm4135\webapp;
-
+use ttm4135\webapp\Hash;
 class Sql
 {
     static $pdo;
@@ -14,7 +14,7 @@ class Sql
      * Create tables.
      */
     static function up() {
-        $q1 = "CREATE TABLE users (id INTEGER PRIMARY KEY, username VARCHAR(50), password VARCHAR(50), email varchar(50),  bio varhar(50), isadmin INTEGER);";
+        $q1 = "CREATE TABLE users (id INTEGER PRIMARY KEY, username VARCHAR(50), password VARCHAR(250), email varchar(50),  bio varhar(50), isadmin INTEGER);";
 
         self::$pdo->exec($q1);
 
@@ -25,9 +25,10 @@ class Sql
 
     static function insertDummyUsers() {
 
-
-        $q1 = "INSERT INTO users(username, password, isadmin) VALUES ('admin', 'admin', 1)";
-        $q2 = "INSERT INTO users(username, password) VALUES ('bob', 'bob')";
+        $pwAdmin = Hash::make("admin");
+        $pwBob = Hash::make("bob");
+        $q1 = "INSERT INTO users(username, password, isadmin) VALUES ('admin', '$pwAdmin', 1)";
+        $q2 = "INSERT INTO users(username, password) VALUES ('bob', '$pwBob')";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);

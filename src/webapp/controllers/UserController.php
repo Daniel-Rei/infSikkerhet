@@ -4,6 +4,7 @@ namespace ttm4135\webapp\controllers;
 
 use ttm4135\webapp\models\User;
 use ttm4135\webapp\Auth;
+use ttm4135\webapp\Hash;
 
 class UserController extends Controller
 {
@@ -27,8 +28,8 @@ class UserController extends Controller
     {
         $request = $this->app->request;
         $username = $request->post('username');
-        $password = $request->post('password');
-
+        $pass = $request->post('password');
+        $password = Hash::make($pass);
 
         $user = User::makeEmpty();
         $user->setUsername($username);
@@ -59,9 +60,15 @@ class UserController extends Controller
             $user->delete();
             $this->app->flash('info', 'User ' . $user->getUsername() . '  with id ' . $tuserid . ' has been deleted.');
             $this->app->redirect('/admin');
-        } else {
+        } 
+        elseif (Auth::check()) 
+        {
             $username = Auth::user()->getUserName();
             $this->app->flash('info', 'You do not have access this resource. You are logged in as ' . $username);
+            $this->app->redirect('/');
+        }
+        else {
+            $this->app->flash('info', 'You need to be logged');
             $this->app->redirect('/');
         }
     }
@@ -87,9 +94,15 @@ class UserController extends Controller
           }
 
           $this->app->redirect('/admin');
-      } else {
+      } 
+      elseif (Auth::check()) 
+      {
           $username = Auth::user()->getUserName();
           $this->app->flash('info', 'You do not have access this resource. You are logged in as ' . $username);
+          $this->app->redirect('/');
+      }
+      else{
+          $this->app->flash('info', 'You need to be logged');
           $this->app->redirect('/');
       }
     }
@@ -103,10 +116,14 @@ class UserController extends Controller
           $this->render('showuser.twig', [
             'user' => $user
           ]);
-        } else {
+        } elseif (Auth::check()) {
             $username = Auth::user()->getUserName();
             $this->app->flash('info', 'You do not have access this resource. You are logged in as ' . $username);
             $this->app->redirect('/');
+        }
+        else{
+           $this->app->flash('info', 'You need to be logged');
+           $this->app->redirect('/'); 
         }
     }
 
@@ -121,7 +138,8 @@ class UserController extends Controller
             $request = $this->app->request;
 
             $username = $request->post('username');
-            $password = $request->post('password');
+            $pass = $request->post('password');
+            $password = Hash::make($pass);
             $email = $request->post('email');
             $bio = $request->post('bio');
 
@@ -140,39 +158,45 @@ class UserController extends Controller
             $this->app->redirect('/admin');
 
 
-        } else {
+        } elseif (Auth::check()) {
             $username = $user->getUserName();
             $this->app->flash('info', 'You do not have access this resource. You are logged in as ' . $username);
             $this->app->redirect('/');
+        }
+        else {
+           $this->app->flash('info', 'You need to be logged');
+           $this->app->redirect('/'); 
         }
     }
 
     function edit($tuserid)    
     { 
-
+            
         $user = User::findById($tuserid);
-
         if (! $user) {
-            throw new \Exception("Unable to fetch logged in user's object from db.");
+            $this->app->flash('info', 'Unable to fetch logged in users object');
+            $this->app->redirect('/'); 
+            //throw new \Exception("Unable to fetch logged in user's object from db.");
         } elseif (Auth::userAccess($tuserid)) {
 
 
             $request = $this->app->request;
 
             $username = $request->post('username');
-            $password = $request->post('password');
             $email = $request->post('email');
             $bio = $request->post('bio');
-
             $isAdmin = ($request->post('isAdmin') != null);
-            
-
-            $user->setUsername($username);
-            $user->setPassword($password);
+            $pass = $request->post('password');
+            if($pass != ""){
+                $password = Hash::make($pass);
+                $user->setPassword($password);
+            }
+            $user->setUsername($username); 
             $user->setBio($bio);
             $user->setEmail($email);
-            $user->setIsAdmin($isAdmin);
-
+            if(Auth::isAdmin()){
+                $user->setIsAdmin($isAdmin);
+            }
             $user->save();
             $this->app->flashNow('info', 'Your profile was successfully saved.');
 
@@ -181,11 +205,17 @@ class UserController extends Controller
             $this->render('showuser.twig', ['user' => $user]);
 
 
-        } else {
+        } elseif (Auth::check()) { 
             $username = $user->getUserName();
             $this->app->flash('info', 'You do not have access this resource. You are logged in as ' . $username);
             $this->app->redirect('/');
         }
+        else{
+           $this->app->flash('info', 'You need to be logged');
+           $this->app->redirect('/'); 
+        }       
     }
+        
+    
 
 }
