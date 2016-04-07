@@ -1,0 +1,44 @@
+{% extends 'base.twig' %}
+
+
+
+{% block content %}
+
+<h2>Login</h2>
+
+{{ flash.error|raw }} <br />
+
+<form action="" method="POST" onsubmit="return validate()">
+    <div id="feil"></div>
+<label>Username: </label>
+<input type="text" id="user" name="username"> <br />
+<label>Password: </label>
+<input type="text" name="password"> <br />
+<input type="submit" name="submit" value="Log in">
+</form>
+
+<script type="text/javascript">
+
+    function validateUserName() {
+
+    	var regex = /^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,19}$/;
+        var OK = regex.test(document.getElementById("user").value);
+        if(!OK) {
+            document.getElementById("feil").innerHTML ="Invalid username or password";
+            return false;
+        }
+        return true;
+    }
+
+	function validate() {
+	var OK = true;
+	if(!validateUserName()){
+		OK = false;
+	}
+	return OK;
+	}
+
+    </script>
+
+{% endblock %}
+
