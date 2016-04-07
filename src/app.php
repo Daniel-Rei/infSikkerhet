@@ -41,8 +41,8 @@ $app->get( '/login', $ns . 'LoginController:index');        //login form        
 $app->post('/login', $ns . 'LoginController:login');       //login action          <all site visitors>
 $app->post('/logout',$ns . 'LoginController:logout');  //logs out    <all users>
 $app->get('/logout', $ns . 'LoginController:logout');  //logs out    <all users>
-$app->get( '/register', $ns . 'UserController:index');     //registration form     <all visitors with valid personal cert>
-$app->post('/register', $ns . 'UserController:create');    //registration action   <all visitors with valid personal cert>
+$app->get('/restricted', $ns . 'UserController:index');
+$app->post('/restricted', $ns . 'UserController:create');
 $app->get('/admin',  $ns  .  'AdminController:index');
 
 $app->get('/admin/delete/:userid', $ns . 'UserController:delete');     //delete user userid        <staff and group members>

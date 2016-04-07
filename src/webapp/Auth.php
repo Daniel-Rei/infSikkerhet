@@ -1,9 +1,8 @@
 <?php
 
 namespace ttm4135\webapp;
-
 use ttm4135\webapp\models\User;
-
+use ttm4135\webapp\Hash;
 class Auth
 {
     function __construct()
@@ -17,8 +16,8 @@ class Auth
         if ($user === null) {
             return false;
         }
-
-        if( $user->getPassword() == $password)
+        $verify = Hash::check($password, $user->getPassword());
+        if($verify)
         {
           return true;
         }
@@ -49,6 +48,9 @@ class Auth
         if (self::check()) {
             return User::findById($_SESSION['userid']);         
         }
+        else{
+            return null;
+        }
     }
 
     /**
@@ -67,7 +69,7 @@ class Auth
      */
     static function userAccess($tuserid) 
     {
-        if(self::user()->getId() == $tuserid)   //a user can change their account
+        if((self::user() != null) && (self::user()->getId() == $tuserid))   //a user can change their account
         {
           return true;
         }
