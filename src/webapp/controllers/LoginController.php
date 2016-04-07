@@ -32,6 +32,9 @@ class LoginController extends Controller
             $user = User::findByUser($username);
             $_SESSION['userid'] = $user->getId();
             $this->app->flash('info', "You are now successfully logged in as " . $user->getUsername() . ".");
+            $rand = rand(40 , 55);
+            $randString = $this->generateRandomString($rand);
+            $_SESSION["randStr"] = $randString;
             $this->app->redirect('/');
         } else {
             $this->app->flashNow('error', 'Incorrect username/password combination.');
@@ -47,4 +50,14 @@ class LoginController extends Controller
         return;
        
     }
+    
+   function generateRandomString($length) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
 }

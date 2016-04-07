@@ -16,7 +16,7 @@
                 <a href="/"> Home</a></br />
                 <br>
                 {% if isLoggedIn %}
-                    Logged in as {{ loggedInUsername|raw }}.<br>
+                    Logged in as {{ loggedInUsername }}.<br>
                     {% if isAdmin %}
                         <a href="/admin">Admin section</a> <br>
                     {% endif %}
@@ -30,7 +30,7 @@
 
             </div>
             <div id="content">
-                <div id="flashinfo">{{ flash.info|raw }}</div>
+                <div id="flashinfo">{{ flash.info }}</div>
 
 
                 {% block content %}

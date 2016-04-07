@@ -19,6 +19,9 @@ class Controller
             $variables['isAdmin'] = $user->isAdmin();
             $variables['loggedInUsername'] = $user->getUsername();
             $variables['loggedInID'] = $user->getId();
+            $variables['userStr'] = $_SESSION['randStr'];
+           
+            
         }
         print $this->app->render($template, $variables);
     }

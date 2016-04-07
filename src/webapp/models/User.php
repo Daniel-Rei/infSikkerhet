@@ -42,13 +42,8 @@ class User
     function save()
     {
         if ($this->id === null) {
-            /*$query = sprintf(self::INSERT_QUERY,
-                $this->username,
-                $this->password,
-                $this->email,
-                $this->bio,
-                $this->isAdmin            );*/
             
+           
             $query = self::$app->db->prepare(self::INSERT_QUERY);
           return $query->execute(array($this->username,
                 $this->password,
@@ -56,14 +51,7 @@ class User
                 $this->bio,
                 $this->isAdmin));
         } else {
-          /*$query = sprintf(self::UPDATE_QUERY,
-                $this->username,
-                $this->password,
-                $this->email,
-                $this->bio,
-                $this->isAdmin,
-                $this->id
-            );*/
+          
           $query = self::$app->db->prepare(self::UPDATE_QUERY);
           return $query->execute(array($this->username,
                 $this->password,
@@ -73,15 +61,13 @@ class User
                 $this->id));
         }
         
-        //return self::$app->db->exec($query);
     }
 
     function delete()
-    {
-        $query = sprintf(self::DELETE_QUERY,
-            $this->id
+    {   
+        $query = self::$app->db->prepare(self::DELETE_QUERY 
         );
-        return self::$app->db->exec($query);
+        return $query->execute(array($this->id));
     }
 
     function getId()
