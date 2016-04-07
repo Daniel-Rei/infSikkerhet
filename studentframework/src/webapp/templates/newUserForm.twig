@@ -8,18 +8,69 @@
 <h2>Register new user</h2>
 
 {{ flash.error|raw }} <br />
-
-<form action="" method="POST">
+<div id="feilUser"></div> 
+<div id="feilPass"></div> 
+<form action="" method="POST" onsubmit="return validate()">
 
 <label>Username: </label>
-<input type="text" name="username"> <br />
+<input type="text" id="user" onchange="validateUserName()" name="username"> <br />
 <label>Password: </label>
-<input type="text" name="password"> <br />
+<input type="password" id="pass" onchange="validatePassword()" name="password"> <br />
 <label>Email: </label>
 <input type="email" name="email"> <br />
 <label>Biography: </label>
-<input type="text" name="bio"> <br />
+<input type="text" id="bio" name="bio"> <br />
 <input type="submit" name="submit" value="Submit">
 </form>
+
+<script type="text/javascript">
+    function validateUserName() {
+
+        var regex = /^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,19}$/;
+
+        var OK = regex.test(document.getElementById("user").value);
+        if(!OK) {
+            document.getElementById("feilUser").innerHTML ="UserName can only contain between 2 and 10 letters and numbers.<br>";
+            return false;
+        }
+        document.getElementById("feilUser").innerHTML ="";
+        return true;
+    }
+    
+    function validatePassword() {
+
+        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        var OK = regex.test(document.getElementById("pass").value);
+
+        if(!OK) {
+            document.getElementById("feilPass").innerHTML ="Password must contain atleast one number, one uppercase and a lowercase letter, and with length 8 or longer.<br>";
+            return false;    
+        }
+        document.getElementById("feilPass").innerHTML ="";
+        return true;
+    }
+    function validatebio() {
+        var regex = /^[a-zA-Z0-9.]{1}[a-zA-Z0-9.? \s]{1,249}$/;
+        var OK = regex.test(document.getElementById("bio").value);
+
+        if(!OK) {
+        document.getElementById("feil").innerHTML ="Content can not be empty/start with whitespace. Illegal sybol used."
+        return false;
+        }
+        return true;
+    }
+        
+        function validate() {
+
+        OK = true;
+        if(!validateUserName()) {
+            OK = false;
+        }
+        if(!validatePassword()) {
+            OK = false;
+        }
+        return OK;
+    }
+</script>
 {% endblock %}
 
