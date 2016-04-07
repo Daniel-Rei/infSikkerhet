@@ -124,7 +124,7 @@ class UserController extends Controller
             $password = $request->post('password');
             $email = $request->post('email');
             $bio = $request->post('bio');
-
+            
             $isAdmin = ($request->post('isAdmin') != null);
             
 
