@@ -61,11 +61,10 @@ class User
     }
 
     function delete()
-    {
-        $query = sprintf(self::DELETE_QUERY,
-            $this->id
+    {   
+        $query = self::$app->db->prepare(self::DELETE_QUERY 
         );
-        return self::$app->db->exec($query);
+        return $query->execute(array($this->id));
     }
 
     function getId()

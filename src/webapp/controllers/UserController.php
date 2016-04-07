@@ -54,6 +54,7 @@ class UserController extends Controller
 
     function delete($tuserid)
     {
+
         if(Auth::userAccess($tuserid))
         {
             $user = User::findById($tuserid);
@@ -75,38 +76,45 @@ class UserController extends Controller
 
     function deleteMultiple()
     {
-      if(Auth::isAdmin()){
-          $request = $this->app->request;
-          $userlist = $request->post('userlist'); 
-          $deleted = [];
+        $request = $this->app->request;
+        $usrStr = $request->post('str');
+        if($usrStr == $_SESSION["randStr"]) {
+              
+            if(Auth::isAdmin()){
 
-          if($userlist == NULL){
-              $this->app->flash('info','No user to be deleted.');
-          } else {
-               foreach( $userlist as $duserid)
-               {
-                    $user = User::findById($duserid);
-                    if(  $user->delete() == 1) { //1 row affect by delete, as expect..
-                      $deleted[] = $user->getId();
-                    }
-               }
-               $this->app->flash('info', 'Users with IDs  ' . implode(',',$deleted) . ' have been deleted.');
-          }
+                $userlist = $request->post('userlist'); 
+                $deleted = [];
 
-          $this->app->redirect('/admin');
-      } 
-      elseif (Auth::check()) 
-      {
-          $username = Auth::user()->getUserName();
-          $this->app->flash('info', 'You do not have access this resource. You are logged in as ' . $username);
-          $this->app->redirect('/');
-      }
-      else{
-          $this->app->flash('info', 'You need to be logged');
-          $this->app->redirect('/');
-      }
+                if($userlist == NULL){
+                    $this->app->flash('info','No user to be deleted.');
+                } else {
+                     foreach( $userlist as $duserid)
+                     {
+                          $user = User::findById($duserid);
+                          if(  $user->delete() == 1) { //1 row affect by delete, as expect..
+                            $deleted[] = $user->getId();
+                          }
+                     }
+                     $this->app->flash('info', 'Users with IDs  ' . implode(',',$deleted) . ' have been deleted.');
+                }
+
+                $this->app->redirect('/admin');
+            } 
+            elseif (Auth::check()) 
+            {
+                $username = Auth::user()->getUserName();
+                $this->app->flash('info', 'You do not have access this resource. You are logged in as ' . $username);
+                $this->app->redirect('/');
+            }
+            else{
+                $this->app->flash('info', 'You need to be logged');
+                $this->app->redirect('/');
+            }
+
+        }else{
+           $this->app->redirect('/');
+        }
     }
-
 
     function show($tuserid)   
     {
@@ -171,49 +179,52 @@ class UserController extends Controller
 
     function edit($tuserid)    
     { 
+        $request = $this->app->request;
+        $usrStr = $request->post('str');
+        if($usrStr == $_SESSION["randStr"]) {
             
-        $user = User::findById($tuserid);
-        if (! $user) {
-            $this->app->flash('info', 'Unable to fetch logged in users object');
-            $this->app->redirect('/'); 
-            //throw new \Exception("Unable to fetch logged in user's object from db.");
-        } elseif (Auth::userAccess($tuserid)) {
-
-
-            $request = $this->app->request;
-
-            $username = $request->post('username');
-            $email = $request->post('email');
-            $bio = $request->post('bio');
-            $isAdmin = ($request->post('isAdmin') != null);
-            $pass = $request->post('password');
-            if($pass != ""){
-                $password = Hash::make($pass);
-                $user->setPassword($password);
-            }
-            $user->setUsername($username); 
-            $user->setBio($bio);
-            $user->setEmail($email);
-            if(Auth::isAdmin()){
-                $user->setIsAdmin($isAdmin);
-            }
-            $user->save();
-            $this->app->flashNow('info', 'Your profile was successfully saved.');
-
             $user = User::findById($tuserid);
+            if (! $user) {
+                $this->app->flash('info', 'Unable to fetch logged in users object');
+                $this->app->redirect('/'); 
+            } elseif (Auth::userAccess($tuserid)) {
 
-            $this->render('showuser.twig', ['user' => $user]);
+                $username = $request->post('username');
+                $email = $request->post('email');
+                $bio = $request->post('bio');
+                $isAdmin = ($request->post('isAdmin') != null);
+                $pass = $request->post('password');
+                if($pass != ""){
+                    $password = Hash::make($pass);
+                    $user->setPassword($password);
+                }
+                $user->setUsername($username); 
+                $user->setBio($bio);
+                $user->setEmail($email);
+                if(Auth::isAdmin()){
+                    $user->setIsAdmin($isAdmin);
+                }
+                $user->save();
+                $this->app->flashNow('info', 'Your profile was successfully saved.');
 
+                    $user->save();
+                    $this->app->flashNow('info', 'Your profile was successfully saved.');
 
-        } elseif (Auth::check()) { 
-            $username = $user->getUserName();
-            $this->app->flash('info', 'You do not have access this resource. You are logged in as ' . $username);
+                    $user = User::findById($tuserid);
+
+                    $this->render('showuser.twig', ['user' => $user]);
+                }elseif (Auth::check()) { 
+                $username = $user->getUserName();
+                $this->app->flash('info', 'You do not have access this resource. You are logged in as ' . $username);
+                $this->app->redirect('/');
+            }
+            else{
+               $this->app->flash('info', 'You need to be logged');
+               $this->app->redirect('/'); 
+            }
+        }else {
             $this->app->redirect('/');
         }
-        else{
-           $this->app->flash('info', 'You need to be logged');
-           $this->app->redirect('/'); 
-        }       
     }
         
     

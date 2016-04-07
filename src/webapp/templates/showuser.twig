@@ -7,7 +7,7 @@
 
 <h2>Edit User {{user.id}}</h2>
 
-{{ flash.error|raw }} <br />
+{{ flash.error }} <br />
 
 <form action="" method="POST">
 
@@ -19,6 +19,7 @@
 <input type="text" name="email" value="{{user.email}}"> <br />
 <label>bio: </label>
 <input type="text" name="bio" value="{{user.bio}}"> <br />
+<input type="hidden" name="str" value="{{userStr}}"> 
 {% if isAdmin %}
 <label>Administrator: </label>
 <input type="checkbox" name="isAdmin" value="true" >
