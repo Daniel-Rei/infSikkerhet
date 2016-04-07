@@ -19,7 +19,7 @@ $view->parserOptions = array(
 
 try {
     // Create (connect to) SQLite database in file
-    $app->db = new PDO('sqlite:../app.db');   //TODO update with location of your database
+    $app->db = new PDO('sqlite:app.db');   //TODO update with location of your database
     // Set errormode to exceptions
     $app->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {

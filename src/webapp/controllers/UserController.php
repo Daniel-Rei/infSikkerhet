@@ -142,7 +142,7 @@ class UserController extends Controller
             $password = Hash::make($pass);
             $email = $request->post('email');
             $bio = $request->post('bio');
-
+            
             $isAdmin = ($request->post('isAdmin') != null);
             
 
